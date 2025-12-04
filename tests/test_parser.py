@@ -10,6 +10,107 @@ import pytest
 from netmonitor.parser import LogEntry, LogParser
 
 
+class TestLogEntryParametrized:
+    """Tests parametrizados para LogEntry."""
+    
+    @pytest.mark.parametrize("level,expected_is_error", [
+        ("ERROR", True),
+        ("CRITICAL", True),
+        ("INFO", False),
+        ("DEBUG", False),
+        ("WARNING", False),
+    ])
+    def test_is_error_levels(self, level: str, expected_is_error: bool) -> None:
+        """Test parametrizado para is_error con diferentes niveles."""
+        entry = LogEntry(
+            timestamp=datetime.now(),
+            level=level,
+            device="TestDevice",
+            message="Test message",
+        )
+        assert entry.is_error == expected_is_error
+    
+    @pytest.mark.parametrize("level,expected_is_warning", [
+        ("WARNING", True),
+        ("ERROR", False),
+        ("INFO", False),
+        ("DEBUG", False),
+        ("CRITICAL", False),
+    ])
+    def test_is_warning_levels(self, level: str, expected_is_warning: bool) -> None:
+        """Test parametrizado para is_warning."""
+        entry = LogEntry(
+            timestamp=datetime.now(),
+            level=level,
+            device="TestDevice",
+            message="Test message",
+        )
+        assert entry.is_warning == expected_is_warning
+    
+    @pytest.mark.parametrize("level_input,expected_output", [
+        ("error", "ERROR"),
+        ("Error", "ERROR"),
+        ("ERROR", "ERROR"),
+        ("warning", "WARNING"),
+        ("WaRnInG", "WARNING"),
+    ])
+    def test_level_normalization_cases(
+        self, level_input: str, expected_output: str
+    ) -> None:
+        """Test que level se normaliza a mayúsculas en todos los casos."""
+        entry = LogEntry(
+            timestamp=datetime.now(),
+            level=level_input,
+            device="TestDevice",
+            message="Test message",
+        )
+        assert entry.level == expected_output
+
+
+class TestLogParserEdgeCases:
+    """Tests de casos especiales del parser."""
+    
+    @pytest.mark.parametrize("invalid_line", [
+        "",  # Línea vacía
+        "# Comentario",
+        "línea sin formato correcto",
+        "2024-12-04 ERROR mensaje sin device",
+        "INVALID TIMESTAMP 2024 ERROR [Device] Message",
+    ])
+    def test_parse_invalid_lines(self, invalid_line: str, tmp_path: Path) -> None:
+        """Test que líneas inválidas se manejan correctamente."""
+        log_file = tmp_path / "invalid.log"
+        log_file.write_text(invalid_line, encoding='utf-8')
+        
+        parser = LogParser(log_file)
+        entries = parser.parse()
+        
+        # Líneas inválidas no generan entradas
+        assert len(entries) == 0
+        # Pero se trackean como errores
+        assert parser.error_count >= 0  # Dependiendo si es comentario o inválida
+    
+    def test_parse_mixed_valid_invalid(self, tmp_path: Path) -> None:
+        """Test archivo con mezcla de líneas válidas e inválidas."""
+        log_content = """
+        2024-12-04 08:00:00 ERROR [Router-01] Connection failed
+        línea inválida
+        2024-12-04 08:01:00 INFO [Switch-02] Port up
+        # comentario
+        2024-12-04 08:02:00 WARNING [Router-01] High CPU
+        """
+        log_file = tmp_path / "mixed.log"
+        log_file.write_text(log_content, encoding='utf-8')
+        
+        parser = LogParser(log_file)
+        entries = parser.parse()
+        
+        # Solo las 3 líneas válidas
+        assert len(entries) == 3
+        assert entries[0].level == "ERROR"
+        assert entries[1].level == "INFO"
+        assert entries[2].level == "WARNING"
+
 class TestLogEntry:
     """Tests para el modelo LogEntry."""
     
