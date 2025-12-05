@@ -1,0 +1,29 @@
+======================================================================
+NETWORK LOG ANALYSIS REPORT
+======================================================================
+
+Total Entries: 41
+Time Range: 2024-12-04 08:00:15 → 2024-12-04 10:00:15
+Duration: 2.0 hours
+Error Rate: 41.46%
+
+LEVEL DISTRIBUTION:
+----------------------------------------------------------------------
+  INFO           16 ( 39.0%)
+  ERROR          14 ( 34.1%)
+  WARNING         8 ( 19.5%)
+  CRITICAL        3 (  7.3%)
+
+DEVICES WITH ERRORS:
+----------------------------------------------------------------------
+  Router-01                        11 errors
+  Switch-02                         4 errors
+  Firewall-03                       2 errors
+
+TOP ERRORS:
+----------------------------------------------------------------------
+  1. [6x] Connection timeout to X.X.X.X
+  2. [1x] BGP peer X.X.X.X down
+  3. [1x] Memory usage critical: N%
+  4. [1x] Packet dropped: invalid source
+  5. [1x] STP loop detected on port N
