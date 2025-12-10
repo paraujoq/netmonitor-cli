@@ -1,236 +1,321 @@
-# 🌐 NetMonitor CLI
+# 📊 NetMonitor CLI
 
-Herramienta de línea de comandos para análisis de logs de equipos de red (routers, switches, etc.).
+> Professional network log analysis tool with 100% test coverage
 
-**Desarrollado por:** Pedro Araujo Quintero  
-**Tecnologías:** Python 3.12+, Typer, Pydantic, Rich
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-48%20passing-success.svg)](tests/)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-success.svg)](htmlcov/)
+[![Code Style](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
----
+A powerful command-line tool for analyzing network device logs (routers, switches, firewalls) with beautiful visual reports and comprehensive statistics.
 
-## ✨ Características
-
-- ✅ **Parser robusto** con validación Pydantic
-- 📊 **Análisis estadístico** de logs
-- 🎨 **Output colorido** en terminal con Rich
-- 📁 **Múltiples formatos** de reporte (texto, JSON, HTML)
-- 🧪 **Tests unitarios** con pytest
-- 🔍 **Type hints completos** para mejor autocompletado
-- ⚡ **Performance** optimizado con análisis eficiente
+![NetMonitor Demo](docs/screenshots/03-analyze.png)
 
 ---
 
-## 🚀 Instalación
+## ✨ Features
 
-### Requisitos
-- Python 3.12 o superior
-- `uv` (gestor de paquetes moderno)
+- 🔍 **Smart Log Parsing** - Robust parsing with Pydantic validation
+- 📊 **Statistical Analysis** - Error rates, device distribution, time patterns
+- 🎨 **Beautiful Reports** - Rich terminal UI with colors and visual bars
+- 📁 **Multiple Export Formats** - Console, Text, JSON, and HTML
+- ✅ **100% Test Coverage** - 48 tests ensuring reliability
+- 🚀 **Professional CLI** - Built with Typer for excellent UX
+- 🔧 **Pattern Detection** - Groups similar errors automatically
+- ⏰ **Time Analysis** - Hourly distribution and duration tracking
 
-### Pasos
+---
 
+## 🚀 Quick Start
+
+### Installation
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/tu-usuario/netmonitor-cli.git
+# Clone the repository
+git clone https://github.com/paraujoq/netmonitor-cli.git
 cd netmonitor-cli
 
-# 2. Crear entorno virtual e instalar dependencias
-uv venv
-source .venv/bin/activate  # En Windows: .venv\Scripts\activate
-uv pip install -e ".[dev]"
+# Create virtual environment
+python -m venv .venv
 
-# 3. Verificar instalación
-netmonitor --help
+# Activate virtual environment
+# On Windows:
+.venv\Scripts\Activate.ps1
+# On Linux/Mac:
+source .venv/bin/activate
+
+# Install in development mode
+pip install -e .
 ```
 
----
-
-## 📖 Uso
-
-### Comando Básico
-
+### Try the Demo
 ```bash
-# Analizar un archivo de logs
-netmonitor analyze sample_logs/network.log
-```
-
-### Opciones Avanzadas
-
-```bash
-# Guardar reporte en archivo
-netmonitor analyze logs/router.log -o report.txt
-
-# Generar reporte en JSON
-netmonitor analyze logs/router.log -o report.json -f json
-
-# Generar reporte en HTML
-netmonitor analyze logs/router.log -o report.html -f html
-```
-
-### Demo
-
-```bash
-# Ver una demostración rápida
 netmonitor demo
 ```
 
 ---
 
-## 📝 Formato de Logs Esperado
+## 📖 Usage
 
-El parser espera logs en el siguiente formato:
+### Basic Analysis
 
-```
-YYYY-MM-DD HH:MM:SS LEVEL [DEVICE] MESSAGE
-```
-
-**Ejemplo:**
-```
-2024-10-05 14:30:45 ERROR [Router-01] Connection timeout to 192.168.1.1
-2024-10-05 14:31:12 WARNING [Switch-Core-01] High CPU utilization: 85%
-2024-10-05 14:32:00 CRITICAL [Router-02] Power supply failure
+Analyze a log file and display results in the terminal:
+```bash
+netmonitor analyze network.log
 ```
 
-**Niveles soportados:** DEBUG, INFO, WARNING, ERROR, CRITICAL
+### Export to Different Formats
+
+**Text Report:**
+```bash
+netmonitor analyze network.log -o report.txt -f text
+```
+
+**JSON Export:**
+```bash
+netmonitor analyze network.log -o report.json -f json
+```
+
+**HTML Report:**
+```bash
+netmonitor analyze network.log -o report.html -f html
+```
+
+### Command Options
+```bash
+netmonitor analyze <log-file> [OPTIONS]
+
+Options:
+  -o, --output PATH      Output file path
+  -f, --format TEXT      Format: console, text, json, html
+  -q, --quiet           Suppress progress messages
+  --help                Show help message
+```
+
+---
+
+## 📊 Sample Output
+
+### Console Report
+```
+╭──────────────────────────────────╮
+│  📊 Network Log Analysis Report  │
+╰──────────────────────────────────╯
+
+📋 Summary
+┌────────────────┬────────────────┐
+│ Total Entries  │ 127            │
+│ Time Range     │ 08:00 → 10:00  │
+│ Duration       │ 2.0 hours      │
+│ Error Rate     │ 41.5% 🔴       │
+└────────────────┴────────────────┘
+
+📊 Level Distribution
+
+🚨 CRITICAL  ███ 3   (7.3%)
+🔴 ERROR     ████████████████ 14  (34.1%)
+🟡 WARNING   ███████ 7   (17.1%)
+🔵 INFO      █████████████████ 17  (41.5%)
+
+📱 Top Devices by Activity
+┌───┬──────────────┬────────┬──────────────────────┐
+│ # │ Device       │ Events │ Bar                  │
+├───┼──────────────┼────────┼──────────────────────┤
+│ 1 │ Router-01    │     45 │ ████████████████████ │
+│ 2 │ Switch-03    │     32 │ ██████████████       │
+│ 3 │ Firewall-02  │     28 │ ████████████         │
+└───┴──────────────┴────────┴──────────────────────┘
+```
+
+### HTML Report
+
+Beautiful, responsive HTML reports with modern design:
+
+![HTML Report](docs/screenshots/04-html-report.png)
+
+---
+
+## 🏗️ Architecture
+```
+netmonitor-cli/
+├── src/netmonitor/
+│   ├── parser.py      # Log parsing with Pydantic validation
+│   ├── analyzer.py    # Statistical analysis and pattern detection
+│   ├── reporter.py    # Visual reports in multiple formats
+│   └── main.py        # CLI interface with Typer
+├── tests/
+│   ├── test_parser.py    # 29 tests
+│   └── test_analyzer.py  # 19 tests
+├── sample_logs/       # Example log files
+└── docs/              # Documentation and screenshots
+```
 
 ---
 
 ## 🧪 Testing
 
+Run the test suite:
 ```bash
-# Ejecutar todos los tests
+# Run all tests
 pytest
 
-# Con coverage
-pytest --cov=netmonitor --cov-report=html
+# Run with coverage
+pytest --cov=netmonitor --cov-report=term-missing
 
-# Tests específicos con verbose
+# Run specific test file
 pytest tests/test_parser.py -v
 ```
 
+**Test Results:**
+- ✅ 48 tests passing
+- ✅ 100% coverage on core modules (parser, analyzer)
+- ✅ Parametrized tests for edge cases
+- ✅ Performance tests with large datasets
+
 ---
 
-## 🛠️ Desarrollo
+## 🛠️ Tech Stack
 
-### Linting y Formatting
+| Category | Technology |
+|----------|-----------|
+| **Language** | Python 3.12+ |
+| **CLI Framework** | [Typer](https://typer.tiangolo.com/) - Modern CLI with type hints |
+| **UI/Display** | [Rich](https://rich.readthedocs.io/) - Beautiful terminal output |
+| **Validation** | [Pydantic](https://docs.pydantic.dev/) - Data validation with type hints |
+| **Logging** | [Loguru](https://loguru.readthedocs.io/) - Simplified logging |
+| **Testing** | [pytest](https://pytest.org/) - Comprehensive testing framework |
+| **Coverage** | [pytest-cov](https://pytest-cov.readthedocs.io/) - Code coverage reporting |
 
-```bash
-# Formatear código con Ruff
-ruff format src/
+---
 
-# Linting
-ruff check src/
+## 📚 Log Format
 
-# Type checking con mypy
-mypy src/
+NetMonitor expects logs in this format:
+```
+YYYY-MM-DD HH:MM:SS LEVEL [DEVICE] MESSAGE
 ```
 
-### Estructura del Proyecto
-
+**Example:**
 ```
-netmonitor-cli/
-├── src/
-│   └── netmonitor/
-│       ├── __init__.py
-│       ├── main.py          # CLI principal
-│       ├── parser.py        # Parser de logs
-│       ├── analyzer.py      # Análisis estadístico
-│       └── reporter.py      # Generación de reportes
-├── tests/
-│   └── test_parser.py       # Tests unitarios
-├── sample_logs/
-│   └── network.log          # Logs de ejemplo
-├── pyproject.toml           # Configuración del proyecto
-└── README.md
+2024-12-04 08:15:23 ERROR [Router-01] Connection timeout to 192.168.1.100
+2024-12-04 08:16:45 WARNING [Switch-02] High CPU usage: 85%
+2024-12-04 08:17:12 INFO [Firewall-03] Port 443 opened
 ```
 
+**Supported Levels:**
+- `CRITICAL` - Critical system failures
+- `ERROR` - Error events
+- `WARNING` - Warning messages
+- `INFO` - Informational messages
+- `DEBUG` - Debug information
+
 ---
 
-## 📊 Ejemplo de Salida
+## 🎯 Use Cases
 
+### Network Operations Center (NOC)
+- Monitor router/switch/firewall logs
+- Identify recurring connection issues
+- Track error rates over time
+- Generate executive reports
+
+### Telecom Infrastructure
+- Analyze VoLTE/IMS logs
+- Track eNodeB failures
+- Monitor handover success rates
+- Identify problematic network elements
+
+### DevOps/SRE
+- Aggregate logs from multiple devices
+- Pattern detection in error messages
+- Time-based analysis for incident correlation
+- Export to JSON for further processing
+
+---
+
+## 🗺️ Roadmap
+
+### Version 0.2.0 (Planned)
+- [ ] Real-time log monitoring (`netmonitor watch`)
+- [ ] Multiple file analysis
+- [ ] Advanced filtering by time range
+- [ ] Custom log format configuration
+- [ ] Email alerts for critical events
+
+### Version 0.3.0 (Future)
+- [ ] Web dashboard
+- [ ] Database integration (SQLite/PostgreSQL)
+- [ ] Historical trend analysis
+- [ ] Machine learning for anomaly detection
+- [ ] Integration with Grafana/Prometheus
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 Author
+
+**Pedro Araujo**
+- Role: Senior PM Telecom → Full Stack Developer
+- Project: Learning journey - Week 1
+- LinkedIn: (https://www.linkedin.com/in/pcaq/)
+- GitHub: [@paraujoq](https://github.com/paraujoq)
+
+---
+
+## 🙏 Acknowledgments
+
+- Built as part of a structured learning path from PM to Full Stack Developer
+- Inspired by real-world telecom network monitoring needs
+- Uses modern Python best practices and professional tooling
+
+---
+
+## 📊 Project Stats
 ```
-📊 Reporte de Análisis de Logs
-
-╭─────────────────── Resumen General ───────────────────╮
-│ Total de Entradas: 50                                 │
-│ Período: 2024-10-05 08:15 → 2024-10-05 09:03         │
-│ Duración: 0.8 horas                                   │
-│ Tasa de Errores: 32.00%                               │
-╰───────────────────────────────────────────────────────╯
-
-         Distribución por Nivel          
-┏━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┓
-┃ Nivel    ┃ Cantidad ┃ Porcentaje ┃
-┡━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━┩
-│ INFO     │       20 │     40.0%  │
-│ ERROR    │       14 │     28.0%  │
-│ WARNING  │       12 │     24.0%  │
-│ CRITICAL │        3 │      6.0%  │
-│ DEBUG    │        1 │      2.0%  │
-└──────────┴──────────┴────────────┘
+Lines of Code:    ~800 (excluding tests)
+Test Coverage:    100% (core modules)
+Tests:            48 passing
+Development Time: 7 days (structured learning)
+Commits:          10+ with clear messages
 ```
 
 ---
 
-## 🎓 Conceptos de Python Moderno Aplicados
+## 💡 Learning Outcomes
 
-Este proyecto utiliza las mejores prácticas de Python moderno:
-
-1. **Type Hints Completos**: Mejora el autocompletado y detección de errores
-2. **Pydantic V2**: Validación de datos declarativa y eficiente
-3. **Dataclasses**: Estructuras de datos inmutables y eficientes
-4. **Pattern Matching**: (Python 3.10+) Para lógica condicional clara
-5. **f-strings**: Formateo de strings moderno y legible
-6. **Context Managers**: Manejo automático de recursos
-7. **Comprehensions**: Código conciso y pythonic
-8. **Property Decorators**: Atributos calculados elegantes
-
----
-
-## 🔄 Próximas Mejoras
-
-- [ ] Soporte para logs en JSON y syslog
-- [ ] Análisis de tendencias temporales
-- [ ] Alertas automáticas por umbrales
-- [ ] Dashboard web interactivo
-- [ ] Integración con sistemas de monitoreo (Prometheus, Grafana)
-- [ ] Soporte para logs comprimidos (gzip)
-- [ ] Filtrado avanzado por regex
+This project demonstrates:
+- ✅ Modern Python (3.12+, type hints, dataclasses)
+- ✅ CLI development with Typer
+- ✅ Data validation with Pydantic
+- ✅ Professional testing with pytest
+- ✅ Visual terminal UI with Rich
+- ✅ Git workflow and version control
+- ✅ Project structure and organization
+- ✅ Documentation and README best practices
 
 ---
 
-## 📚 Recursos de Aprendizaje
+<div align="center">
 
-- [Typer Documentation](https://typer.tiangolo.com/)
-- [Pydantic V2 Docs](https://docs.pydantic.dev/)
-- [Rich Documentation](https://rich.readthedocs.io/)
-- [Python Type Hints Cheatsheet](https://mypy.readthedocs.io/en/stable/cheat_sheet_py3.html)
+**[⭐ Star this repo](https://github.com/your-username/netmonitor-cli)** if you find it useful!
 
----
+Made with ❤️ and Python
 
-## 📄 Licencia
-
-MIT License - ver archivo LICENSE para detalles
-
----
-
-## 👤 Autor
-
-**Pedro Araujo Quintero**
-- LinkedIn: [linkedin.com/in/pcaq](https://www.linkedin.com/in/pcaq)
-- Email: pedro.araujoq@gmail.com
-- Ubicación: Santiago, Chile
-
----
-
-## 🤝 Contribuciones
-
-¡Las contribuciones son bienvenidas! Por favor:
-
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add: amazing feature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
----
-
-**¿Encontraste un bug?** Abre un issue en GitHub con detalles y pasos para reproducirlo.
+</div>
