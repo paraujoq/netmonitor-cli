@@ -6,7 +6,7 @@
 
 ## 📊 Current Status (v0.1.0) ✅
 
-**Released:** December 2024  
+**Released:** December 2025  
 **Status:** Production Ready
 
 ### Features Delivered
@@ -29,7 +29,7 @@
 
 ## 🎯 Version 0.2.0 - Real-time Monitoring (Planned)
 
-**Target:** Q1 2025  
+**Target:** Q1 2026
 **Focus:** Live monitoring and advanced filtering
 
 ### High Priority Features
@@ -94,7 +94,7 @@ netmonitor analyze logs/ --recursive
 
 ## 🎯 Version 0.3.0 - Extensibility (Future)
 
-**Target:** Q2 2025  
+**Target:** Q2 2026  
 **Focus:** Customization and automation
 
 ### Medium Priority Features
@@ -162,7 +162,7 @@ netmonitor trends --device Router-01
 
 ## 🎯 Version 1.0.0 - Web Platform (Vision)
 
-**Target:** Q3 2025  
+**Target:** Q3 2026
 **Focus:** Web interface and advanced analytics
 
 ### Long-term Vision
