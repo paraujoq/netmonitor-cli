@@ -312,6 +312,19 @@ This project demonstrates:
 
 ---
 
+## 🗺️ Roadmap
+
+See our [Product Roadmap](ROADMAP.md) for planned features and future versions.
+
+**Upcoming in v0.2.0:**
+- 🔴 Real-time log watching
+- 🟡 Date/time filtering
+- 🟡 Multi-file analysis
+
+[View Full Roadmap →](ROADMAP.md)
+
+---
+
 <div align="center">
 
 **[⭐ Star this repo](https://github.com/your-username/netmonitor-cli)** if you find it useful!
